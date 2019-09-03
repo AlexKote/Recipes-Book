@@ -14,8 +14,8 @@ export class RecipeService {
             'A super-tasty Schnitzel - just awesome!',
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn0slbudWCkszlxfK-aSsq9oW1g-TnoFy0FX0dxWdcNi1nlaC1',
             [
-                new Ingredient('Meat',1),
-                new Ingredient('French Fries', 20)
+                // new Ingredient('Meat',1),
+                // new Ingredient('French Fries', 20)
             ]),
         new Recipe(
             'Big Fat Burger', 
