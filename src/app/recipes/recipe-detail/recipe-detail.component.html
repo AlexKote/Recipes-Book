@@ -14,7 +14,7 @@
 </div>
 <div class="row">
     <div class="col-xs-12">
-        <div class="btn-group"
+        <div class="btn-group" *ngIf="authService.isAuthenticated()"
         appDropdown>
             <button 
                 type="button" 
@@ -23,11 +23,16 @@
                 <span class="caret"></span> 
             </button>
             <ul class="dropdown-menu">
-                <li><a style="cursor: pointer;" (click)="onAddToShoppingList()">To Shopping list</a></li>
                 <li><a style="cursor: pointer;" (click)="onEditRecipe()">Edit Recipe</a></li>
                 <li><a style="cursor: pointer;" (click)="onDeleteRecipe()">Delete Recipe</a></li>
             </ul>
         </div>
+        <button 
+            class="btn btn-primary"
+            (click)="onAddToShoppingList()">
+            To Shopping list              
+            <img id="backet" class="img-fluid" src="../../assets/images/shopping-basket-add.png">
+        </button>
     </div>
 </div>
 <div class="row">
