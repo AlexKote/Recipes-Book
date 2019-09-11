@@ -13,6 +13,21 @@
     </div>
 </div>
 <div class="row">
+    <div class="col-xs-7">
+        <star-rating-comp 
+            [starType]="'svg'"
+            [rating]="rating"
+            [step]="0.5"
+            [showHalfStars]="'true'"
+            [labelVisible]="'true'"
+            [labelPosition]="'right'"
+            [labelText]="'('+rating+')'"
+            [readOnly]="readOnlyRating"
+            (onRatingChange)="changeRating($event)"
+            ></star-rating-comp>
+    </div>
+</div>
+<div class="row">
     <div class="col-xs-12">
         <div class="btn-group" *ngIf="authService.isAuthenticated()"
         appDropdown>

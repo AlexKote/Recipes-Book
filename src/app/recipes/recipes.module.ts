@@ -11,6 +11,8 @@ import { RecipeItemComponent } from './recipe-list/recipe-item/recipe-item.compo
 import { RecipesRoutingModule } from './recipes-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
+import { StarRatingModule } from 'levon-angular-star-rating';
+
 @NgModule({
     declarations: [
         RecipesComponent,
@@ -21,10 +23,11 @@ import { SharedModule } from '../shared/shared.module';
         RecipeItemComponent
     ],
     imports: [
-        CommonModule,     
+        CommonModule,
         ReactiveFormsModule,
         RecipesRoutingModule,
-        SharedModule
+        SharedModule,
+        StarRatingModule
     ]
 })
 export class RecipesModule {}
