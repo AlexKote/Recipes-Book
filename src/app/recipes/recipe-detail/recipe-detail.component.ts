@@ -4,6 +4,7 @@ import { RecipeService } from '../recipe.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Rating } from 'src/app/shared/rating.model';
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Component({
   selector: 'app-recipe-detail',
@@ -16,6 +17,8 @@ export class RecipeDetailComponent implements OnInit {
   readOnlyRating: boolean;
   rating: number = null;
   ratingAmount: number;
+  helper = new JwtHelperService();
+  mail: string;
 
   constructor(private recipeService: RecipeService,
               private route: ActivatedRoute,
@@ -34,12 +37,12 @@ export class RecipeDetailComponent implements OnInit {
           this.rating = this.recipeService.getRating(this.recipe);
         } else {
           this.readOnlyRating = false;
-          // console.log(this.authService.mail);
+          this.mail = this.helper.decodeToken(this.authService.token)['email'];
+          // console.log(this.mail);
           if (this.recipe.ratingMas.length > 0) {
             for (let i = 0; i < this.recipe.ratingMas.length; i++) {
-              if (this.recipe.ratingMas[i].user === this.authService.mail) {
+              if (this.recipe.ratingMas[i].user === this.mail) {
                 this.rating = this.recipe.ratingMas[i].rating;
-                // console.log(this.rating);
                 break;
               } else {
                 this.rating = 0;
@@ -49,10 +52,10 @@ export class RecipeDetailComponent implements OnInit {
             this.rating = 0;
           }
         }
-        console.log(this.rating + ' ' + this.ratingAmount);
-        this.recipe.ratingMas.forEach(element => {
-          console.log(element.user + ': ' + element.rating);
-        });
+        // console.log(this.rating + ' ' + this.ratingAmount);
+        // this.recipe.ratingMas.forEach(element => {
+        //   console.log(element.user + ': ' + element.rating);
+        // });
       }
     );
   }
@@ -76,7 +79,7 @@ export class RecipeDetailComponent implements OnInit {
     this.rating = event['rating'];
     if (this.recipe.ratingMas.length > 0) {
       for (let i = 0; i < this.recipe.ratingMas.length; i++) {
-        if (this.recipe.ratingMas[i].user === this.authService.mail) {
+        if (this.recipe.ratingMas[i].user === this.mail) {
           this.recipe.ratingMas[i].rating = this.rating;
           console.log(this.recipe.ratingMas[i].user + ' = ' + this.recipe.ratingMas[i].rating);
           check = true;
@@ -85,7 +88,7 @@ export class RecipeDetailComponent implements OnInit {
       }
     }
     if (!check) {
-      this.recipe.ratingMas.push(new Rating(this.authService.mail, this.rating));
+      this.recipe.ratingMas.push(new Rating(this.mail, this.rating));
     }
   }
 }
