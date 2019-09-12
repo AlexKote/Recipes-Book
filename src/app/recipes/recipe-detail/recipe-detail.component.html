@@ -21,9 +21,9 @@
             [showHalfStars]="'true'"
             [labelVisible]="'true'"
             [labelPosition]="'right'"
-            [labelText]="'('+rating+')'"
+            [labelText]="'(' + ratingAmount + ')'"
             [readOnly]="readOnlyRating"
-            (onRatingChange)="changeRating($event)"
+            (onClick)="changeRating($event)"
             ></star-rating-comp>
     </div>
 </div>

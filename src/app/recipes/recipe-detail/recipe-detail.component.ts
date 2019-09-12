@@ -3,8 +3,7 @@ import { Recipe } from '../recipes.model';
 import { RecipeService } from '../recipe.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/auth.service';
-
-import { StarRatingModule } from 'levon-angular-star-rating';
+import { Rating } from 'src/app/shared/rating.model';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -15,7 +14,8 @@ export class RecipeDetailComponent implements OnInit {
   recipe: Recipe;
   id: number;
   readOnlyRating: boolean;
-  rating = 1.5;
+  rating: number = null;
+  ratingAmount: number;
 
   constructor(private recipeService: RecipeService,
               private route: ActivatedRoute,
@@ -28,15 +28,33 @@ export class RecipeDetailComponent implements OnInit {
       (params: Params) => {
         this.id = +params['id'];
         this.recipe = this.recipeService.getRecipe(this.id);
+        this.ratingAmount = this.recipeService.getRatingAmount(this.recipe);
+        if (!this.authService.isAuthenticated()) {
+          this.readOnlyRating = true;
+          this.rating = this.recipeService.getRating(this.recipe);
+        } else {
+          this.readOnlyRating = false;
+          // console.log(this.authService.mail);
+          if (this.recipe.ratingMas.length > 0) {
+            for (let i = 0; i < this.recipe.ratingMas.length; i++) {
+              if (this.recipe.ratingMas[i].user === this.authService.mail) {
+                this.rating = this.recipe.ratingMas[i].rating;
+                // console.log(this.rating);
+                break;
+              } else {
+                this.rating = 0;
+              }
+            }
+          } else {
+            this.rating = 0;
+          }
+        }
+        console.log(this.rating + ' ' + this.ratingAmount);
+        this.recipe.ratingMas.forEach(element => {
+          console.log(element.user + ': ' + element.rating);
+        });
       }
     );
-    if (!this.authService.isAuthenticated()) {
-      this.readOnlyRating = true;
-    } else {
-      this.readOnlyRating = false;
-      console.log(this.authService.getToken());
-      console.log(this.authService.token);
-    }
   }
 
   onAddToShoppingList() {
@@ -54,6 +72,20 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   changeRating(event: any) {
+    let check: boolean;
     this.rating = event['rating'];
+    if (this.recipe.ratingMas.length > 0) {
+      for (let i = 0; i < this.recipe.ratingMas.length; i++) {
+        if (this.recipe.ratingMas[i].user === this.authService.mail) {
+          this.recipe.ratingMas[i].rating = this.rating;
+          console.log(this.recipe.ratingMas[i].user + ' = ' + this.recipe.ratingMas[i].rating);
+          check = true;
+          break;
+        }
+      }
+    }
+    if (!check) {
+      this.recipe.ratingMas.push(new Rating(this.authService.mail, this.rating));
+    }
   }
 }

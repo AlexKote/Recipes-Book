@@ -25,7 +25,10 @@ export class DataStorageService {
                 (recipes: Recipe[]) => {
                     for (let recipe of recipes) {
                         if (!recipe['ingredients']) {
-                            recipe['ingredients'] = [];  
+                            recipe['ingredients'] = [];
+                        }
+                        if (!recipe['ratingMas']) {
+                            recipe['ratingMas'] = [];
                         }
                     }
                     return recipes;
