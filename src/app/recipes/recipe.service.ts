@@ -7,25 +7,22 @@ import { Rating } from "../shared/rating.model";
 
 @Injectable()
 export class RecipeService {
-  recipesChanged = new Subject<Recipe[]>();
+  public recipesChanged = new Subject<Recipe[]>();
 
   private recipes: Recipe[] = [
     new Recipe(
-      "Tasty Schnitzel",
-      [new Rating("test@test.com", 1)],
-      "A super-tasty Schnitzel - just awesome!",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn0slbudWCkszlxfK-aSsq9oW1g-TnoFy0FX0dxWdcNi1nlaC1",
-      [
-        // new Ingredient('Meat',1),
-        // new Ingredient('French Fries', 20)
-      ]
+      'Tasty Schnitzel',
+      [new Rating('test@test.com', 1)],
+      'A super-tasty Schnitzel - just awesome!',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn0slbudWCkszlxfK-aSsq9oW1g-TnoFy0FX0dxWdcNi1nlaC1',
+      []
     ),
     new Recipe(
-      "Big Fat Burger",
-      [new Rating("test@test.com", 5), new Rating("qwerty@test.com", 2)],
-      "What else you need to say?",
-      "https://greal-service.ru/wp-content/uploads/2018/07/big_tasty.png",
-      [new Ingredient("Buns", 2), new Ingredient("Meat", 1)]
+      'Big Fat Burger',
+      [new Rating('test@test.com', 5), new Rating('qwerty@test.com', 2)],
+      'What else you need to say?',
+      'https://greal-service.ru/wp-content/uploads/2018/07/big_tasty.png',
+      [new Ingredient('Buns', 2), new Ingredient('Meat', 1)]
     )
   ];
 

@@ -1,63 +1,43 @@
-import { Component, OnInit } from '@angular/core';
-import { Recipe } from '../recipes.model';
-import { RecipeService } from '../recipe.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { AuthService } from 'src/app/auth/auth.service';
-import { Rating } from 'src/app/shared/rating.model';
+import { Component, OnInit } from "@angular/core";
+import { Recipe } from "../recipes.model";
+import { RecipeService } from "../recipe.service";
+import { ActivatedRoute, Params, Router } from "@angular/router";
+import { AuthService } from "src/app/auth/auth.service";
+import { Rating } from "src/app/shared/rating.model";
 import { JwtHelperService } from "@auth0/angular-jwt";
 
 @Component({
-  selector: 'app-recipe-detail',
-  templateUrl: './recipe-detail.component.html',
-  styleUrls: ['./recipe-detail.component.css']
+  selector: "app-recipe-detail",
+  templateUrl: "./recipe-detail.component.html",
+  styleUrls: ["./recipe-detail.component.css"]
 })
 export class RecipeDetailComponent implements OnInit {
-  recipe: Recipe;
-  id: number;
-  readOnlyRating: boolean;
-  rating: number = null;
-  ratingAmount: number;
-  helper = new JwtHelperService();
-  mail: string;
+  private id: number;
+  private helper = new JwtHelperService();
+  public recipe: Recipe;
+  public readOnlyRating: boolean;
+  public rating: number;
+  public ratingAmount: number;
 
-  constructor(private recipeService: RecipeService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private authService: AuthService) {
-  }
+  constructor(
+    private recipeService: RecipeService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
-    this.route.params.subscribe(
-      (params: Params) => {
-        this.id = +params['id'];
-        this.recipe = this.recipeService.getRecipe(this.id);
-        this.ratingAmount = this.recipeService.getRatingAmount(this.recipe);
-        if (!this.authService.isAuthenticated()) {
-          this.readOnlyRating = true;
-          this.rating = this.recipeService.getRating(this.recipe);
-        } else {
-          this.readOnlyRating = false;
-          this.mail = this.helper.decodeToken(this.authService.token)['email'];
-          // console.log(this.mail);
-          if (this.recipe.ratingMas.length > 0) {
-            for (let i = 0; i < this.recipe.ratingMas.length; i++) {
-              if (this.recipe.ratingMas[i].user === this.mail) {
-                this.rating = this.recipe.ratingMas[i].rating;
-                break;
-              } else {
-                this.rating = 0;
-              }
-            }
-          } else {
-            this.rating = 0;
-          }
-        }
-        // console.log(this.rating + ' ' + this.ratingAmount);
-        // this.recipe.ratingMas.forEach(element => {
-        //   console.log(element.user + ': ' + element.rating);
-        // });
-      }
-    );
+    this.route.params.subscribe((params: Params) => {
+      this.id = Number(params['id']);
+      this.readOnlyRating = !this.authService.isAuthenticated();
+      this.recipe = this.recipeService.getRecipe(this.id);
+      this.rating = this.recipeService.getRating(this.recipe);
+      this.ratingAmount = this.recipeService.getRatingAmount(this.recipe);
+      // console.log(this.rating + ' ' + this.ratingAmount);
+      // this.recipe.ratingMas.forEach(element => {
+      //   console.log(element.user + ': ' + element.rating);
+      // });
+    });
   }
 
   onAddToShoppingList() {
@@ -65,30 +45,24 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onEditRecipe() {
-    this.router.navigate(['edit'], {relativeTo: this.route});
+    this.router.navigate(['edit'], { relativeTo: this.route });
     // this.router.navigate(['../', this.id, 'edit'], {relativeTo: this.route});
   }
 
   onDeleteRecipe() {
     this.recipeService.deleteRecipe(this.id);
-    this.router.navigate(['../']);
+    this.router.navigate(['/recipes']);
   }
 
   changeRating(event: any) {
-    let check: boolean;
+    const mail = this.helper.decodeToken(this.authService.token)['email'];
+    const check = this.recipe.ratingMas.findIndex(rating => rating.user === mail);
     this.rating = event['rating'];
-    if (this.recipe.ratingMas.length > 0) {
-      for (let i = 0; i < this.recipe.ratingMas.length; i++) {
-        if (this.recipe.ratingMas[i].user === this.mail) {
-          this.recipe.ratingMas[i].rating = this.rating;
-          console.log(this.recipe.ratingMas[i].user + ' = ' + this.recipe.ratingMas[i].rating);
-          check = true;
-          break;
-        }
-      }
-    }
-    if (!check) {
-      this.recipe.ratingMas.push(new Rating(this.mail, this.rating));
+    if (check === -1) {
+      this.recipe.ratingMas.push(new Rating(mail, this.rating));
+    } else {
+      this.recipe.ratingMas[check].rating = this.rating;
+      // console.log(this.recipe.ratingMas[check].user + ' = ' + this.recipe.ratingMas[check].rating);
     }
   }
 }
