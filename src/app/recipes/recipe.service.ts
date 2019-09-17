@@ -1,9 +1,9 @@
-import { Recipe } from "./recipes.model";
-import { Injectable } from "@angular/core";
-import { Ingredient } from "../shared/ingredient.model";
-import { ShoppingListService } from "../shopping-list/shopping-list.service";
-import { Subject } from "rxjs";
-import { Rating } from "../shared/rating.model";
+import { Recipe } from './recipes.model';
+import { Injectable } from '@angular/core';
+import { Ingredient } from '../shared/ingredient.model';
+import { ShoppingListService } from '../shopping-list/shopping-list.service';
+import { Subject } from 'rxjs';
+import { Rating } from '../shared/rating.model';
 
 @Injectable()
 export class RecipeService {
@@ -70,7 +70,7 @@ export class RecipeService {
       recipe.ratingMas.forEach(element => {
         sum += element.rating;
       });
-      return Math.floor(sum / recipe.ratingMas.length * 10) / 10;
+      return Math.floor((sum / recipe.ratingMas.length) * 10) / 10;
     } else {
       return 0;
     }

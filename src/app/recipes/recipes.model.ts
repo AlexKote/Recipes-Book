@@ -1,5 +1,5 @@
-import { Ingredient } from "../shared/ingredient.model";
-import { Rating } from "../shared/rating.model";
+import { Ingredient } from '../shared/ingredient.model';
+import { Rating } from '../shared/rating.model';
 
 export class Recipe {
   public name: string;

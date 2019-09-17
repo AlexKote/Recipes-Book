@@ -1,15 +1,15 @@
-import { Component, OnInit } from "@angular/core";
-import { Recipe } from "../recipes.model";
-import { RecipeService } from "../recipe.service";
-import { ActivatedRoute, Params, Router } from "@angular/router";
-import { AuthService } from "src/app/auth/auth.service";
-import { Rating } from "src/app/shared/rating.model";
-import { JwtHelperService } from "@auth0/angular-jwt";
+import { Component, OnInit } from '@angular/core';
+import { Recipe } from '../recipes.model';
+import { RecipeService } from '../recipe.service';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Rating } from 'src/app/shared/rating.model';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
-  selector: "app-recipe-detail",
-  templateUrl: "./recipe-detail.component.html",
-  styleUrls: ["./recipe-detail.component.css"]
+  selector: 'app-recipe-detail',
+  templateUrl: './recipe-detail.component.html',
+  styleUrls: ['./recipe-detail.component.css']
 })
 export class RecipeDetailComponent implements OnInit {
   private id: number;
@@ -40,23 +40,23 @@ export class RecipeDetailComponent implements OnInit {
     });
   }
 
-  onAddToShoppingList() {
+  private onAddToShoppingList() {
     this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
   }
 
-  onEditRecipe() {
+  private onEditRecipe() {
     this.router.navigate(['edit'], { relativeTo: this.route });
     // this.router.navigate(['../', this.id, 'edit'], {relativeTo: this.route});
   }
 
-  onDeleteRecipe() {
+  private onDeleteRecipe() {
     this.recipeService.deleteRecipe(this.id);
     this.router.navigate(['/recipes']);
   }
 
-  changeRating(event: any) {
+  private changeRating(event: any) {
     const mail = this.helper.decodeToken(this.authService.token)['email'];
-    const check = this.recipe.ratingMas.findIndex(rating => rating.user === mail);
+    const check = this.recipe.ratingMas.findIndex(({ user }) => user === mail);
     this.rating = event['rating'];
     if (check === -1) {
       this.recipe.ratingMas.push(new Rating(mail, this.rating));

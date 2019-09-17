@@ -1,15 +1,15 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { DataStorageService } from "../../shared/data-storage.service";
-import { AuthService } from "../../auth/auth.service";
-import { ShoppingListService } from "../../shopping-list/shopping-list.service";
-import { Subscription } from "rxjs";
-import { Ingredient } from "../../shared/ingredient.model";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { DataStorageService } from '../../shared/data-storage.service';
+import { AuthService } from '../../auth/auth.service';
+import { ShoppingListService } from '../../shopping-list/shopping-list.service';
+import { Subscription } from 'rxjs';
+import { Ingredient } from '../../shared/ingredient.model';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: "app-header",
-  templateUrl: "./header.component.html",
-  styleUrls: ["./header.component.css"]
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
@@ -23,24 +23,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.subscription = this.slservice.ingredientsChanged.subscribe(
-      (ingredients: Ingredient[]) => {
-        this.ingredientCount = ingredients.length;
-      }
-    );
+    this.subscription = this.slservice.ingredientsChanged.subscribe((ingredients: Ingredient[]) => {
+      this.ingredientCount = ingredients.length;
+    });
   }
 
-  onSaveData() {
+  private onSaveData() {
     this.dataStorageService.storeRecipes().subscribe((response: Response) => {
       console.log(response);
     });
   }
 
-  onFetchData() {
+  private onFetchData() {
     this.dataStorageService.getRecipes();
   }
 
-  onLogout() {
+  private onLogout() {
     this.authService.logout();
     this.router.navigate(['../']);
   }

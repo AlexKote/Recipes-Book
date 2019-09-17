@@ -1,18 +1,19 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Params, Router } from "@angular/router";
-import { FormGroup, FormControl, FormArray, Validators } from "@angular/forms";
-import { RecipeService } from "../recipe.service";
-import { Recipe } from "../recipes.model";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+import { RecipeService } from '../recipe.service';
+import { Recipe } from '../recipes.model';
 
 @Component({
-  selector: "app-recipe-edit",
-  templateUrl: "./recipe-edit.component.html",
-  styleUrls: ["./recipe-edit.component.css"]
+  selector: 'app-recipe-edit',
+  templateUrl: './recipe-edit.component.html',
+  styleUrls: ['./recipe-edit.component.css']
 })
 export class RecipeEditComponent implements OnInit {
   private id: number;
   private editMode = false;
   public recipeForm: FormGroup;
+  as = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -28,7 +29,7 @@ export class RecipeEditComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  private onSubmit() {
     const newRecipe = new Recipe(
       this.recipeForm.value['name'],
       [],
@@ -44,7 +45,7 @@ export class RecipeEditComponent implements OnInit {
     this.onCancel();
   }
 
-  onAddIngredient() {
+  private onAddIngredient() {
     (<FormArray>this.recipeForm.get('ingredients')).push(
       new FormGroup({
         name: new FormControl(null, Validators.required),
@@ -56,18 +57,16 @@ export class RecipeEditComponent implements OnInit {
     );
   }
 
-  onDeleteIngredient(index: number) {
+  private onDeleteIngredient(index: number) {
     (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
   }
 
-  onCancel() {
+  private onCancel() {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   private initForm() {
-    let recipeName = '';
-    let recipeImagePath = '';
-    let recipeDescription = '';
+    let [recipeName, recipeImagePath, recipeDescription] = ['', '', ''];
     let recipeIngredients = new FormArray([]);
 
     if (this.editMode) {
